@@ -94,6 +94,7 @@ These matchers check that all the expected values are included:
 
 #### Miscellaneous Matchers
 
+- `be_successfully_opened`: Check that the response indicates the SSE connection has been opened successfully
 - `be_gracefully_closed`: Check that the response body ends with "\n\n" (indicating proper SSE close)
 
 ### Argument Formats
