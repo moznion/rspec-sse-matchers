@@ -1,0 +1,9 @@
+# Generated from lib/rspec/sse/matchers/version.rb with RBS::Inline
+
+module RSpec
+  module SSE
+    module Matchers
+      VERSION: ::String
+    end
+  end
+end

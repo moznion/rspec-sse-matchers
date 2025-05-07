@@ -1,10 +1,16 @@
 # frozen_string_literal: true
 
 require "bundler/gem_tasks"
-require "minitest/test_task"
+require "rspec/core/rake_task"
 
-Minitest::TestTask.create
+RSpec::Core::RakeTask.new(:spec)
 
 require "standard/rake"
 
-task default: %i[test standard]
+task default: %i[spec standard]
+
+namespace :rbs do
+  task gen: %i[] do
+    sh "rbs-inline --output --opt-out lib"
+  end
+end

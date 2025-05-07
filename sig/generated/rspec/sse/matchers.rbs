@@ -1,10 +1,4 @@
-# frozen_string_literal: true
-
-require_relative "matchers/version"
-require "event_stream_parser"
-
-# @rbs!
-#   type ssePayload = {type: String?, data: String, id: String?, retry: Integer}
+# Generated from lib/rspec/sse/matchers.rb with RBS::Inline
 
 module RSpec
   module Matchers
@@ -13,9 +7,7 @@ module RSpec
     # @example
     #   expect(response).to be_gracefully_closed
     # @rbs return: RSpec::SSE::Matchers::BeGracefullyClosed
-    def be_gracefully_closed
-      RSpec::SSE::Matchers::BeGracefullyClosed.new
-    end
+    def be_gracefully_closed: () -> RSpec::SSE::Matchers::BeGracefullyClosed
 
     # Matches if the response's events match the expected events in order
     #
@@ -24,9 +16,7 @@ module RSpec
     #   expect(response).to be_events(event1, event2)
     # @rbs *events: ssePayload
     # @rbs return: RSpec::SSE::Matchers::BeEvents
-    def be_events(*events)
-      RSpec::SSE::Matchers::BeEvents.new(events.flatten)
-    end
+    def be_events: (*ssePayload events) -> RSpec::SSE::Matchers::BeEvents
 
     # Matches if the response's event types match the expected types in order
     #
@@ -35,9 +25,7 @@ module RSpec
     #   expect(response).to be_event_types("type1", "type2")
     # @rbs *types: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::BeEventTypes
-    def be_event_types(*types)
-      RSpec::SSE::Matchers::BeEventTypes.new(types.flatten)
-    end
+    def be_event_types: (*String | Array[String] types) -> RSpec::SSE::Matchers::BeEventTypes
 
     # Matches if the response's event data match the expected data in order
     #
@@ -46,9 +34,7 @@ module RSpec
     #   expect(response).to be_event_data(data1, data2)
     # @rbs *data: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::BeEventData
-    def be_event_data(*data)
-      RSpec::SSE::Matchers::BeEventData.new(data.flatten)
-    end
+    def be_event_data: (*String | Array[String] data) -> RSpec::SSE::Matchers::BeEventData
 
     # Matches if the response's event IDs match the expected IDs in order
     #
@@ -57,9 +43,7 @@ module RSpec
     #   expect(response).to be_event_ids("id1", "id2")
     # @rbs *ids: String
     # @rbs return: RSpec::SSE::Matchers::BeEventIds
-    def be_event_ids(*ids)
-      RSpec::SSE::Matchers::BeEventIds.new(ids.flatten)
-    end
+    def be_event_ids: (*String ids) -> RSpec::SSE::Matchers::BeEventIds
 
     # Matches if the response's reconnection times match the expected times in order
     #
@@ -68,9 +52,7 @@ module RSpec
     #   expect(response).to be_reconnection_times(1000, 2000)
     # @rbs *times: Integer
     # @rbs return: RSpec::SSE::Matchers::BeReconnectionTimes
-    def be_reconnection_times(*times)
-      RSpec::SSE::Matchers::BeReconnectionTimes.new(times.flatten)
-    end
+    def be_reconnection_times: (*Integer times) -> RSpec::SSE::Matchers::BeReconnectionTimes
 
     # Matches if the response's events contain the expected events regardless of order
     #
@@ -79,9 +61,7 @@ module RSpec
     #   expect(response).to contain_exactly_events(event1, event2)
     # @rbs *events: ssePayload | Array[ssePayload]
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyEvents
-    def contain_exactly_events(*events)
-      RSpec::SSE::Matchers::ContainExactlyEvents.new(events.flatten)
-    end
+    def contain_exactly_events: (*ssePayload | Array[ssePayload] events) -> RSpec::SSE::Matchers::ContainExactlyEvents
 
     # Matches if the response's event types contain the expected types regardless of order
     #
@@ -90,9 +70,7 @@ module RSpec
     #   expect(response).to contain_exactly_event_types("type1", "type2")
     # @rbs *types: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyEventTypes
-    def contain_exactly_event_types(*types)
-      RSpec::SSE::Matchers::ContainExactlyEventTypes.new(types.flatten)
-    end
+    def contain_exactly_event_types: (*String | Array[String] types) -> RSpec::SSE::Matchers::ContainExactlyEventTypes
 
     # Matches if the response's event data contain the expected data regardless of order
     #
@@ -101,9 +79,7 @@ module RSpec
     #   expect(response).to contain_exactly_event_data(data1, data2)
     # @rbs *data: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyEventData
-    def contain_exactly_event_data(*data)
-      RSpec::SSE::Matchers::ContainExactlyEventData.new(data.flatten)
-    end
+    def contain_exactly_event_data: (*String | Array[String] data) -> RSpec::SSE::Matchers::ContainExactlyEventData
 
     # Matches if the response's event IDs contain the expected IDs regardless of order
     #
@@ -112,9 +88,7 @@ module RSpec
     #   expect(response).to contain_exactly_event_ids("id1", "id2")
     # @rbs *ids: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyEventIds
-    def contain_exactly_event_ids(*ids)
-      RSpec::SSE::Matchers::ContainExactlyEventIds.new(ids.flatten)
-    end
+    def contain_exactly_event_ids: (*String | Array[String] ids) -> RSpec::SSE::Matchers::ContainExactlyEventIds
 
     # Matches if the response's reconnection times contain the expected times regardless of order
     #
@@ -123,9 +97,7 @@ module RSpec
     #   expect(response).to contain_exactly_reconnection_times(1000, 2000)
     # @rbs *times: Integer | Array[Integer]
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyReconnectionTimes
-    def contain_exactly_reconnection_times(*times)
-      RSpec::SSE::Matchers::ContainExactlyReconnectionTimes.new(times.flatten)
-    end
+    def contain_exactly_reconnection_times: (*Integer | Array[Integer] times) -> RSpec::SSE::Matchers::ContainExactlyReconnectionTimes
 
     # Matches if the response's events include all the expected events
     #
@@ -134,9 +106,7 @@ module RSpec
     #   expect(response).to have_events(event1, event2)
     # @rbs *events: ssePayload
     # @rbs return: RSpec::SSE::Matchers::HaveEvents
-    def have_events(*events)
-      RSpec::SSE::Matchers::HaveEvents.new(events.flatten)
-    end
+    def have_events: (*ssePayload events) -> RSpec::SSE::Matchers::HaveEvents
 
     # Matches if the response's event types include all the expected types
     #
@@ -145,9 +115,7 @@ module RSpec
     #   expect(response).to have_event_types("type1", "type2")
     # @rbs *types: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::HaveEventTypes
-    def have_event_types(*types)
-      RSpec::SSE::Matchers::HaveEventTypes.new(types.flatten)
-    end
+    def have_event_types: (*String | Array[String] types) -> RSpec::SSE::Matchers::HaveEventTypes
 
     # Matches if the response's event data include all the expected data
     #
@@ -156,9 +124,7 @@ module RSpec
     #   expect(response).to have_event_data(data1, data2)
     # @rbs *data: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::HaveEventData
-    def have_event_data(*data)
-      RSpec::SSE::Matchers::HaveEventData.new(data.flatten)
-    end
+    def have_event_data: (*String | Array[String] data) -> RSpec::SSE::Matchers::HaveEventData
 
     # Matches if the response's event IDs include all the expected IDs
     #
@@ -167,9 +133,7 @@ module RSpec
     #   expect(response).to have_event_ids("id1", "id2")
     # @rbs *ids: String
     # @rbs return: RSpec::SSE::Matchers::HaveEventIds
-    def have_event_ids(*ids)
-      RSpec::SSE::Matchers::HaveEventIds.new(ids.flatten)
-    end
+    def have_event_ids: (*String ids) -> RSpec::SSE::Matchers::HaveEventIds
 
     # Matches if the response's reconnection times include all the expected times
     #
@@ -178,16 +142,15 @@ module RSpec
     #   expect(response).to have_reconnection_times(1000, 2000)
     # @rbs *times: Integer
     # @rbs return: RSpec::SSE::Matchers::HaveReconnectionTimes
-    def have_reconnection_times(*times)
-      RSpec::SSE::Matchers::HaveReconnectionTimes.new(times.flatten)
-    end
+    def have_reconnection_times: (*Integer times) -> RSpec::SSE::Matchers::HaveReconnectionTimes
   end
 end
 
 module RSpec
   module SSE
     module Matchers
-      class Error < StandardError; end
+      class Error < StandardError
+      end
 
       # Helper class for parsing SSE events from response body
       class SseParser
@@ -195,55 +158,36 @@ module RSpec
         #
         # @rbs body: String
         # @rbs return: Array[ssePayload]
-        def self.parse(body)
-          events = []
-          EventStreamParser::Parser.new.feed(body) do |type, data, id, reconnection_time|
-            events << {
-              type: type,
-              data: data,
-              id: id,
-              retry: reconnection_time
-            }
-          end
-          events
-        end
+        def self.parse: (String body) -> Array[ssePayload]
       end
 
       # Base class for SSE matchers
       class BaseMatcher
-        # @rbs @expected: Array
-        # @rbs @actual: Object
-        # @rbs @parsed_events: Array[ssePayload]
+        @expected: Array
+
+        @actual: Object
+
+        @parsed_events: Array[ssePayload]
 
         # Initialize the matcher with expected values
         #
         # @rbs expected: Array
-        def initialize(expected)
-          @expected = expected
-        end
+        def initialize: (Array expected) -> untyped
 
         # Match the actual value against expected
         #
         # @rbs actual: Object
-        def matches?(actual)
-          @actual = actual
-          @parsed_events = SseParser.parse(actual.body)
-          match_condition
-        end
+        def matches?: (Object actual) -> untyped
 
         # Provide failure message
         #
         # @rbs return: String
-        def failure_message
-          "Expected #{description_for(@actual)} to #{description}"
-        end
+        def failure_message: () -> String
 
         # Provide negative failure message
         #
         # @rbs return: String
-        def failure_message_when_negated
-          "Expected #{description_for(@actual)} not to #{description}"
-        end
+        def failure_message_when_negated: () -> String
 
         private
 
@@ -251,34 +195,22 @@ module RSpec
         #
         # @rbs obj: Object
         # @rbs return: String
-        def description_for(obj)
-          if obj.respond_to?(:body)
-            "response with events #{extract_actual.inspect}"
-          else
-            obj.inspect
-          end
-        end
+        def description_for: (Object obj) -> String
 
         # Extract the relevant attribute from parsed events
         #
         # @return [Array] The extracted values
-        def extract_actual
-          @parsed_events
-        end
+        def extract_actual: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "match #{@expected.inspect}"
-        end
+        def description: () -> untyped
 
         # The match condition to be implemented by subclasses
         #
         # @return [Boolean] True if the condition is satisfied
-        def match_condition
-          raise NotImplementedError, "Subclasses must implement match_condition"
-        end
+        def match_condition: () -> untyped
       end
 
       # Matcher for be_gracefully_closed
@@ -287,31 +219,22 @@ module RSpec
         #
         # @param actual [Object] The actual object to match
         # @return [Boolean] True if the body ends with "\n\n"
-        def matches?(actual)
-          @actual = actual
-          @actual.body.end_with?("\n\n")
-        end
+        def matches?: (untyped actual) -> untyped
 
         # Provide failure message
         #
         # @return [String] The failure message
-        def failure_message
-          'Expected response body to end with "\\n\\n" (SSE graceful close)'
-        end
+        def failure_message: () -> untyped
 
         # Provide negative failure message
         #
         # @return [String] The failure message when used with not_to
-        def failure_message_when_negated
-          'Expected response body not to end with "\\n\\n" (SSE graceful close)'
-        end
+        def failure_message_when_negated: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "be gracefully closed"
-        end
+        def description: () -> untyped
       end
 
       # Base matcher for exact matching
@@ -319,16 +242,12 @@ module RSpec
         # Match if extracted actual values exactly match expected values
         #
         # @return [Boolean] True if the values match
-        def match_condition
-          extract_actual == @expected
-        end
+        def match_condition: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "exactly match #{@expected.inspect}"
-        end
+        def description: () -> untyped
       end
 
       # Base matcher for contain exactly matching (order doesn't matter)
@@ -336,16 +255,12 @@ module RSpec
         # Match if extracted actual values match expected values in any order
         #
         # @return [Boolean] True if the values match in any order
-        def match_condition
-          (extract_actual - @expected).empty? && (@expected - extract_actual).empty? && extract_actual.size == @expected.size
-        end
+        def match_condition: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "contain exactly #{@expected.inspect} in any order"
-        end
+        def description: () -> untyped
       end
 
       # Base matcher for inclusion matching (subset)
@@ -353,19 +268,13 @@ module RSpec
         # Match if extracted actual values include all expected values
         #
         # @return [Boolean] True if all expected values are included
-        def match_condition
-          @expected.all? { |expected_item| extract_actual.include?(expected_item) }
-        end
+        def match_condition: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "include #{@expected.inspect}"
-        end
+        def description: () -> untyped
       end
-
-      # Events matchers
 
       # Matcher for be_events
       class BeEvents < ExactMatcher
@@ -379,8 +288,6 @@ module RSpec
       class HaveEvents < IncludeMatcher
       end
 
-      # Event type matchers
-
       # Matcher for be_event_types
       class BeEventTypes < ExactMatcher
         private
@@ -388,16 +295,12 @@ module RSpec
         # Extract event types from parsed events
         #
         # @return [Array] The extracted event types
-        def extract_actual
-          @parsed_events.map { |event| event[:type] }
-        end
+        def extract_actual: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "have event types exactly matching #{@expected.inspect}"
-        end
+        def description: () -> untyped
       end
 
       # Matcher for contain_exactly_event_types
@@ -407,16 +310,12 @@ module RSpec
         # Extract event types from parsed events
         #
         # @return [Array] The extracted event types
-        def extract_actual
-          @parsed_events.map { |event| event[:type] }
-        end
+        def extract_actual: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "contain exactly event types #{@expected.inspect} in any order"
-        end
+        def description: () -> untyped
       end
 
       # Matcher for have_event_types
@@ -426,19 +325,13 @@ module RSpec
         # Extract event types from parsed events
         #
         # @return [Array] The extracted event types
-        def extract_actual
-          @parsed_events.map { |event| event[:type] }
-        end
+        def extract_actual: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "include event types #{@expected.inspect}"
-        end
+        def description: () -> untyped
       end
-
-      # Event data matchers
 
       # Matcher for be_event_data
       class BeEventData < ExactMatcher
@@ -447,16 +340,12 @@ module RSpec
         # Extract event data from parsed events
         #
         # @return [Array] The extracted event data
-        def extract_actual
-          @parsed_events.map { |event| event[:data] }
-        end
+        def extract_actual: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "have event data exactly matching #{@expected.inspect}"
-        end
+        def description: () -> untyped
       end
 
       # Matcher for contain_exactly_event_data
@@ -466,16 +355,12 @@ module RSpec
         # Extract event data from parsed events
         #
         # @return [Array] The extracted event data
-        def extract_actual
-          @parsed_events.map { |event| event[:data] }
-        end
+        def extract_actual: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "contain exactly event data #{@expected.inspect} in any order"
-        end
+        def description: () -> untyped
       end
 
       # Matcher for have_event_data
@@ -485,19 +370,13 @@ module RSpec
         # Extract event data from parsed events
         #
         # @return [Array] The extracted event data
-        def extract_actual
-          @parsed_events.map { |event| event[:data] }
-        end
+        def extract_actual: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "include event data #{@expected.inspect}"
-        end
+        def description: () -> untyped
       end
-
-      # Event ID matchers
 
       # Matcher for be_event_ids
       class BeEventIds < ExactMatcher
@@ -506,16 +385,12 @@ module RSpec
         # Extract event IDs from parsed events
         #
         # @return [Array] The extracted event IDs
-        def extract_actual
-          @parsed_events.map { |event| event[:id] }
-        end
+        def extract_actual: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "have event IDs exactly matching #{@expected.inspect}"
-        end
+        def description: () -> untyped
       end
 
       # Matcher for contain_exactly_event_ids
@@ -525,16 +400,12 @@ module RSpec
         # Extract event IDs from parsed events
         #
         # @return [Array] The extracted event IDs
-        def extract_actual
-          @parsed_events.map { |event| event[:id] }
-        end
+        def extract_actual: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "contain exactly event IDs #{@expected.inspect} in any order"
-        end
+        def description: () -> untyped
       end
 
       # Matcher for have_event_ids
@@ -544,19 +415,13 @@ module RSpec
         # Extract event IDs from parsed events
         #
         # @return [Array] The extracted event IDs
-        def extract_actual
-          @parsed_events.map { |event| event[:id] }
-        end
+        def extract_actual: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "include event IDs #{@expected.inspect}"
-        end
+        def description: () -> untyped
       end
-
-      # Reconnection time matchers
 
       # Matcher for be_reconnection_times
       class BeReconnectionTimes < ExactMatcher
@@ -565,16 +430,12 @@ module RSpec
         # Extract reconnection times from parsed events
         #
         # @return [Array] The extracted reconnection times
-        def extract_actual
-          @parsed_events.map { |event| event[:retry] }
-        end
+        def extract_actual: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "have reconnection times exactly matching #{@expected.inspect}"
-        end
+        def description: () -> untyped
       end
 
       # Matcher for contain_exactly_reconnection_times
@@ -584,16 +445,12 @@ module RSpec
         # Extract reconnection times from parsed events
         #
         # @return [Array] The extracted reconnection times
-        def extract_actual
-          @parsed_events.map { |event| event[:retry] }
-        end
+        def extract_actual: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "contain exactly reconnection times #{@expected.inspect} in any order"
-        end
+        def description: () -> untyped
       end
 
       # Matcher for have_reconnection_times
@@ -603,17 +460,15 @@ module RSpec
         # Extract reconnection times from parsed events
         #
         # @return [Array] The extracted reconnection times
-        def extract_actual
-          @parsed_events.map { |event| event[:retry] }
-        end
+        def extract_actual: () -> untyped
 
         # The matcher description
         #
         # @return [String] A description of the matcher
-        def description
-          "include reconnection times #{@expected.inspect}"
-        end
+        def description: () -> untyped
       end
     end
   end
 end
+
+type ssePayload = { type: String?, data: String, id: String?, retry: Integer }
