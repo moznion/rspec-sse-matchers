@@ -208,9 +208,9 @@ module RSpec
           events = []
           EventStreamParser::Parser.new.feed(body) do |type, data, id, reconnection_time|
             events << {
-              type: type,
-              data: data,
-              id: id,
+              type:,
+              data:,
+              id:,
               retry: reconnection_time
             }
           end
