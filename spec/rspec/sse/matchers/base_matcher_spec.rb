@@ -22,7 +22,7 @@ RSpec.describe RSpec::SSE::Matchers::BaseMatcher do
   subject(:matcher) { TestMatcher.new(test_expected) }
 
   let(:response_body) { "event: message\ndata: test\nid: 1\n\n" }
-  let(:response) { MockResponse.new(response_body) }
+  let(:response) { MockResponse.new(body: response_body) }
   let(:parsed_events) { [{type: "message", data: "test", id: "1", retry: nil}] }
 
   before do

@@ -17,6 +17,15 @@ module RSpec
       RSpec::SSE::Matchers::BeGracefullyClosed.new
     end
 
+    # Matches if the response indicates successfully SSE connection opened
+    #
+    # @example
+    #   expect(response).to be_successfully_opened
+    # @rbs return: RSpec::SSE::Matchers::BeSuccessfullyOpened
+    def be_successfully_opened
+      RSpec::SSE::Matchers::BeSuccessfullyOpened.new
+    end
+
     # Matches if the response's events match the expected events in order
     #
     # @example
@@ -311,6 +320,31 @@ module RSpec
         # @return [String] A description of the matcher
         def description
           "be gracefully closed"
+        end
+      end
+
+      class BeSuccessfullyOpened
+        def matches?(actual)
+          @actual = actual
+          @actual.headers["content-type"] == "text/event-stream" \
+            && @actual.headers["cache-control"]&.match(/no-store/) \
+            && @actual.headers["content-length"].nil? \
+            && @actual.status == 200
+        end
+
+        # @rbs return: String
+        def failure_message
+          "Expected response header of `content-type` is `text/event-stream`, `cache-control` contains `no-store`, `content-length` does not exist, and status code is `2xx`"
+        end
+
+        # @rbs return: String
+        def failure_message_when_negated
+          "Expected response header of `content-type` is not `text/event-stream`, `cache-control` does not contain `no-store`, `content-length` exists, and/or status code is not `2xx`"
+        end
+
+        # @rbs return: String
+        def description
+          "be successfully opened"
         end
       end
 

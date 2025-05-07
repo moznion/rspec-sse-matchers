@@ -9,6 +9,13 @@ module RSpec
     # @rbs return: RSpec::SSE::Matchers::BeGracefullyClosed
     def be_gracefully_closed: () -> RSpec::SSE::Matchers::BeGracefullyClosed
 
+    # Matches if the response indicates successfully SSE connection opened
+    #
+    # @example
+    #   expect(response).to be_successfully_opened
+    # @rbs return: RSpec::SSE::Matchers::BeSuccessfullyOpened
+    def be_successfully_opened: () -> RSpec::SSE::Matchers::BeSuccessfullyOpened
+
     # Matches if the response's events match the expected events in order
     #
     # @example
@@ -235,6 +242,19 @@ module RSpec
         #
         # @return [String] A description of the matcher
         def description: () -> untyped
+      end
+
+      class BeSuccessfullyOpened
+        def matches?: (untyped actual) -> untyped
+
+        # @rbs return: String
+        def failure_message: () -> String
+
+        # @rbs return: String
+        def failure_message_when_negated: () -> String
+
+        # @rbs return: String
+        def description: () -> String
       end
 
       # Base matcher for exact matching

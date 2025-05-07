@@ -15,7 +15,7 @@ RSpec.describe RSpec::SSE::Matchers do
 
   def mock_response_with_events(events)
     body = create_sse_body(events)
-    response = MockResponse.new(body)
+    response = MockResponse.new(body:)
 
     # Allow the SseParser to work with our mock response
     allow(RSpec::SSE::Matchers::SseParser).to receive(:parse).with(body).and_return(events)
@@ -33,8 +33,8 @@ RSpec.describe RSpec::SSE::Matchers do
   let(:empty_response) { mock_response_with_events([]) }
 
   # For gracefully closed matcher which doesn't use the parser
-  let(:gracefully_closed_response) { MockResponse.new("\n\n") }
-  let(:non_gracefully_closed_response) { MockResponse.new("data: test\n") }
+  let(:gracefully_closed_response) { MockResponse.new(body: "\n\n") }
+  let(:non_gracefully_closed_response) { MockResponse.new(body: "data: test\n") }
 
   # be_gracefully_closed matcher
   describe "be_gracefully_closed" do
@@ -44,6 +44,48 @@ RSpec.describe RSpec::SSE::Matchers do
 
     it "doesn't match when the response body doesn't end with newlines" do
       expect(non_gracefully_closed_response).not_to be_gracefully_closed
+    end
+  end
+
+  describe "be_successfully_opened" do
+    let(:response) { MockResponse.new(body: "data: test\n\n", status:, headers:) }
+    let(:status) { 200 }
+    let(:headers) { {"content-type" => "text/event-stream", "cache-control" => "no-store"} }
+
+    it "matches when the response satisfies the condition" do
+      expect(response).to be_successfully_opened
+    end
+
+    context "when the response status code is not 200" do
+      let(:status) { 400 }
+
+      it do
+        expect(response).not_to be_successfully_opened
+      end
+    end
+
+    context "when the response header's content-type is wrong" do
+      let(:headers) { {"content-type" => "application/json", "cache-control" => "no-store"} }
+
+      it do
+        expect(response).not_to be_successfully_opened
+      end
+    end
+
+    context "when the response header's cache-control is wrong" do
+      let(:headers) { {"content-type" => "text/event-stream", "cache-control" => "no-cache"} }
+
+      it do
+        expect(response).not_to be_successfully_opened
+      end
+    end
+
+    context "when the response header's content-length appears" do
+      let(:headers) { {"content-type" => "text/event-stream", "cache-control" => "no-store", "content-length" => 44} }
+
+      it do
+        expect(response).not_to be_successfully_opened
+      end
     end
   end
 

@@ -30,9 +30,10 @@ end
 
 # Mock response class for testing
 class MockResponse
-  attr_reader :body
-
-  def initialize(body)
+  attr_reader :body, :headers, :status
+  def initialize(body:, status: 200, headers: {"content-type" => "text/event-stream", "cache-control" => "no-store"})
     @body = body
+    @status = status
+    @headers = headers
   end
 end
