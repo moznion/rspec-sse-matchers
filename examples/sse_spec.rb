@@ -172,4 +172,42 @@ RSpec.describe "SSE Matchers Examples" do
       end
     end
   end
+
+  describe "JSON Parsing Option" do
+    context "with :json option" do
+      it "parses JSON data for event_data matchers" do
+        # The data is already in JSON format in our examples
+        expect(single_event_response).to be_event_data([{"id" => 1, "message" => "Hello"}], json: true)
+        expect(multiple_events_response).to be_event_data([
+          {"id" => 1, "message" => "Hello"},
+          {"id" => 2, "message" => "World"},
+          {"id" => 3, "message" => "Goodbye"}
+        ], json: true)
+      end
+
+      it "works with contain_exactly matchers" do
+        expect(multiple_events_response).to contain_exactly_event_data([
+          {"id" => 3, "message" => "Goodbye"},
+          {"id" => 1, "message" => "Hello"},
+          {"id" => 2, "message" => "World"}
+        ], json: true)
+      end
+
+      it "works with inclusion matchers" do
+        expect(multiple_events_response).to have_event_data([
+          {"id" => 1, "message" => "Hello"},
+          {"id" => 2, "message" => "World"}
+        ], json: true)
+      end
+
+      it "works with full event matchers" do
+        expected_events = [
+          {type: "message", data: {"id" => 1, "message" => "Hello"}, id: "1", retry: 1000},
+          {type: "update", data: {"id" => 2, "message" => "World"}, id: "2", retry: 2000},
+          {type: "close", data: {"id" => 3, "message" => "Goodbye"}, id: "3", retry: 3000}
+        ]
+        expect(multiple_events_response).to be_events(expected_events, json: true)
+      end
+    end
+  end
 end

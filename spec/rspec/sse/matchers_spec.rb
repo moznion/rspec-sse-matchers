@@ -341,4 +341,70 @@ RSpec.describe RSpec::SSE::Matchers do
       expect(empty_response).to be_reconnection_times([])
     end
   end
+
+  # JSON parsing option
+  describe "json option" do
+    let(:json_event1) { {type: "message", data: '{"id":1,"name":"Alice"}', id: "1", retry: 1000} }
+    let(:json_event2) { {type: "update", data: '{"id":2,"name":"Bob"}', id: "2", retry: 2000} }
+    let(:response_with_json_events) { mock_response_with_events([json_event1, json_event2]) }
+
+    context "be_event_data with :json option" do
+      it "parses JSON data before comparison" do
+        expect(response_with_json_events).to be_event_data([{"id" => 1, "name" => "Alice"}, {"id" => 2, "name" => "Bob"}], json: true)
+      end
+
+      it "keeps original behavior when :json option is not provided" do
+        expect(response_with_json_events).to be_event_data(%w[{"id":1,"name":"Alice"} {"id":2,"name":"Bob"}])
+      end
+
+      it "handles non-JSON data gracefully with :json option" do
+        non_json_event = {type: "message", data: "Not JSON data", id: "1", retry: 1000}
+        response = mock_response_with_events([non_json_event])
+        expect {
+          expect(response).to be_event_data(["Not JSON data"], json: true)
+        }.to raise_error(JSON::ParserError)
+      end
+    end
+
+    context "contain_exactly_event_data with :json option" do
+      it "parses JSON data before comparison" do
+        expect(response_with_json_events).to contain_exactly_event_data([{"id" => 2, "name" => "Bob"}, {"id" => 1, "name" => "Alice"}], json: true)
+      end
+    end
+
+    context "have_event_data with :json option" do
+      it "parses JSON data before comparison" do
+        expect(response_with_json_events).to have_event_data([{"id" => 1, "name" => "Alice"}], json: true)
+      end
+    end
+
+    context "be_events with :json option" do
+      it "parses JSON data in events before comparison" do
+        expected_events = [
+          {type: "message", data: {"id" => 1, "name" => "Alice"}, id: "1", retry: 1000},
+          {type: "update", data: {"id" => 2, "name" => "Bob"}, id: "2", retry: 2000}
+        ]
+        expect(response_with_json_events).to be_events(expected_events, json: true)
+      end
+    end
+
+    context "contain_exactly_events with :json option" do
+      it "parses JSON data in events before comparison" do
+        expected_events = [
+          {type: "update", data: {"id" => 2, "name" => "Bob"}, id: "2", retry: 2000},
+          {type: "message", data: {"id" => 1, "name" => "Alice"}, id: "1", retry: 1000}
+        ]
+        expect(response_with_json_events).to contain_exactly_events(expected_events, json: true)
+      end
+    end
+
+    context "have_events with :json option" do
+      it "parses JSON data in events before comparison" do
+        expected_events = [
+          {type: "message", data: {"id" => 1, "name" => "Alice"}, id: "1", retry: 1000}
+        ]
+        expect(response_with_json_events).to have_events(expected_events, json: true)
+      end
+    end
+  end
 end

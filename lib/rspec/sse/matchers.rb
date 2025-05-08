@@ -2,6 +2,7 @@
 
 require_relative "matchers/version"
 require "event_stream_parser"
+require "json"
 
 # @rbs!
 #   type ssePayload = {type: String?, data: String, id: String?, retry: Integer}
@@ -24,9 +25,10 @@ module RSpec
     # Matches if the response's events match the expected events in order
     #
     # @rbs *events: ssePayload | Array[ssePayload]
+    # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::BeEvents
-    def be_events(*events)
-      RSpec::SSE::Matchers::BeEvents.new(events.flatten)
+    def be_events(*events, json: false)
+      RSpec::SSE::Matchers::BeEvents.new(events.flatten, json:)
     end
 
     # Matches if the response's event types match the expected types in order
@@ -39,10 +41,11 @@ module RSpec
 
     # Matches if the response's event data match the expected data in order
     #
-    # @rbs *data: String | Array[String]
+    # @rbs *data: String | Array[String] | Array[Hash[String, untyped]]
+    # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::BeEventData
-    def be_event_data(*data)
-      RSpec::SSE::Matchers::BeEventData.new(data.flatten)
+    def be_event_data(*data, json: false)
+      RSpec::SSE::Matchers::BeEventData.new(data.flatten, json:)
     end
 
     # Matches if the response's event IDs match the expected IDs in order
@@ -64,9 +67,10 @@ module RSpec
     # Matches if the response's events contain the expected events regardless of order
     #
     # @rbs *events: ssePayload | Array[ssePayload]
+    # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyEvents
-    def contain_exactly_events(*events)
-      RSpec::SSE::Matchers::ContainExactlyEvents.new(events.flatten)
+    def contain_exactly_events(*events, json: false)
+      RSpec::SSE::Matchers::ContainExactlyEvents.new(events.flatten, json:)
     end
 
     # Matches if the response's event types contain the expected types regardless of order
@@ -79,10 +83,11 @@ module RSpec
 
     # Matches if the response's event data contain the expected data regardless of order
     #
-    # @rbs *data: String | Array[String]
+    # @rbs *data: String | Array[String] | Array[Hash[String, untyped]]
+    # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyEventData
-    def contain_exactly_event_data(*data)
-      RSpec::SSE::Matchers::ContainExactlyEventData.new(data.flatten)
+    def contain_exactly_event_data(*data, json: false)
+      RSpec::SSE::Matchers::ContainExactlyEventData.new(data.flatten, json:)
     end
 
     # Matches if the response's event IDs contain the expected IDs regardless of order
@@ -104,9 +109,10 @@ module RSpec
     # Matches if the response's events include all the expected events
     #
     # @rbs *events: ssePayload
+    # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::HaveEvents
-    def have_events(*events)
-      RSpec::SSE::Matchers::HaveEvents.new(events.flatten)
+    def have_events(*events, json: false)
+      RSpec::SSE::Matchers::HaveEvents.new(events.flatten, json:)
     end
 
     # Matches if the response's event types include all the expected types
@@ -119,10 +125,11 @@ module RSpec
 
     # Matches if the response's event data include all the expected data
     #
-    # @rbs *data: String | Array[String]
+    # @rbs *data: String | Array[String] | Array[Hash[String, untyped]]
+    # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::HaveEventData
-    def have_event_data(*data)
-      RSpec::SSE::Matchers::HaveEventData.new(data.flatten)
+    def have_event_data(*data, json: false)
+      RSpec::SSE::Matchers::HaveEventData.new(data.flatten, json:)
     end
 
     # Matches if the response's event IDs include all the expected IDs
@@ -167,13 +174,15 @@ module RSpec
         # @rbs @expected: Array[Object]
         # @rbs @actual: Object
         # @rbs @parsed_events: Array[ssePayload]
+        # @rbs @json: bool
 
         # Initialize the matcher with expected values
         #
         # @rbs expected: Array[Object]
         # @rbs return: RSpec::SSE::Matchers::BaseMatcher
-        def initialize(expected)
+        def initialize(expected, json: false)
           @expected = expected
+          @json = json
         end
 
         # @rbs actual: Object
@@ -205,7 +214,16 @@ module RSpec
 
         # @rbs return: Array[Object]
         def extract_actual
-          @parsed_events
+          # JSON parsing is enabled if `json: true` is passed
+          if @json
+            @parsed_events.map do |event|
+              parsed_event = event.dup
+              parsed_event[:data] = JSON.parse(event[:data])
+              parsed_event
+            end
+          else
+            @parsed_events
+          end
         end
 
         # @rbs return: String
@@ -387,10 +405,18 @@ module RSpec
         private
 
         # Extract event data from parsed events
+        # If :json option is enabled, attempt to parse the data as JSON
         #
-        # @rbs return: Array[String]
+        # @rbs return: Array[String|Hash[String, untyped]]
         def extract_actual
-          @parsed_events.map { |event| event[:data] }
+          @parsed_events.map do |event|
+            # JSON parsing is enabled if json: true is passed
+            if @json
+              JSON.parse(event[:data])
+            else
+              event[:data]
+            end
+          end
         end
       end
 
@@ -482,7 +508,7 @@ module RSpec
 
         # Extract reconnection times from parsed events
         #
-        # @rbs return: Array[Integer,nil]
+        # @rbs return: Array[Integer|nil]
         def extract_actual
           @parsed_events.map { |event| event[:retry] }
         end
