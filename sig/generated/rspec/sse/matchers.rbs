@@ -21,9 +21,9 @@ module RSpec
     # @example
     #   expect(response).to be_events([event1, event2])
     #   expect(response).to be_events(event1, event2)
-    # @rbs *events: ssePayload
+    # @rbs *events: ssePayload | Array[ssePayload]
     # @rbs return: RSpec::SSE::Matchers::BeEvents
-    def be_events: (*ssePayload events) -> RSpec::SSE::Matchers::BeEvents
+    def be_events: (*ssePayload | Array[ssePayload] events) -> RSpec::SSE::Matchers::BeEvents
 
     # Matches if the response's event types match the expected types in order
     #

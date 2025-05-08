@@ -31,7 +31,7 @@ module RSpec
     # @example
     #   expect(response).to be_events([event1, event2])
     #   expect(response).to be_events(event1, event2)
-    # @rbs *events: ssePayload
+    # @rbs *events: ssePayload | Array[ssePayload]
     # @rbs return: RSpec::SSE::Matchers::BeEvents
     def be_events(*events)
       RSpec::SSE::Matchers::BeEvents.new(events.flatten)
