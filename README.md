@@ -2,7 +2,7 @@
 
 A collection of [RSpec](https://rspec.info/) matchers for testing [Server-Sent Events (SSE)](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events).
 
-[![Build Status](https://github.com/moznion/rspec-sse-matchers/workflows/Test/badge.svg)](https://github.com/moznion/rspec-sse-matchers/actions)
+[![Tests](https://github.com/moznion/rspec-sse-matchers/actions/workflows/test.yml/badge.svg)](https://github.com/moznion/rspec-sse-matchers/actions/workflows/test.yml)
 [![Gem Version](https://badge.fury.io/rb/rspec-sse-matchers.svg)](https://badge.fury.io/rb/rspec-sse-matchers)
 
 ## Installation
