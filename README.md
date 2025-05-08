@@ -25,19 +25,14 @@ Or install it yourself as:
 $ gem install rspec-sse-matchers
 ```
 
-## Requirements
-
-- Ruby >= 3.0.0
-- RSpec >= 3.0
-- event_stream_parser ~> 1.0.0
-
-## Usage
+## Synopsis
 
 This gem provides a set of matchers to test SSE responses in your RSpec request specs:
 
 ```ruby
 # In your controller
 def index
+  response.headers['Cache-Control'] = 'no-store'
   response.headers['Content-Type'] = 'text/event-stream'
   sse = SSE.new(response.stream)
   
@@ -50,6 +45,9 @@ end
 RSpec.describe 'SSE endpoint', type: :request do
   it 'sends the expected events' do
     get '/events', headers: { 'Accept' => 'text/event-stream' }
+    
+    # Verify the response indicates a successful SSE connection
+    expect(response).to be_successfully_opened
     
     # Verify the event types
     expect(response).to be_event_types(['message', 'update'])
@@ -71,6 +69,8 @@ These matchers check that the specified values appear in the exact order:
 - `be_event_data`: Check that the event data exactly match the expected data
 - `be_event_ids`: Check that the event IDs exactly match the expected IDs
 - `be_reconnection_times`: Check that the reconnection times exactly match the expected times
+
+All event data matchers (`be_event_data`, `contain_exactly_event_data`, `have_event_data`) and event matchers (`be_events`, `contain_exactly_events`, `have_events`) accept a `json: true` option that will parse the JSON in event data for comparison.
 
 #### Order-Independent Matchers
 
@@ -107,6 +107,26 @@ expect(response).to have_event_types('message', 'update', 'close')
 expect(response).to have_event_types(['message', 'update', 'close'])
 ```
 
+### JSON Parsing Option
+
+Event data matchers and event matchers accept a `json: true` option that automatically parses JSON in event `data` for comparison:
+
+```ruby
+# Without JSON parsing (string comparison)
+expect(response).to be_event_data(['{"id":1,"name":"Alice"}', '{"id":2,"name":"Bob"}'])
+
+# With JSON parsing (object comparison)
+expect(response).to be_event_data([{"id" => 1, "name" => "Alice"}, {"id" => 2, "name" => "Bob"}], json: true)
+
+# This also works with event matchers
+expect(response).to be_events([
+  { type: 'message', data: {"id" => 1, "name" => "Alice"}, id: '1' },
+  { type: 'update', data: {"id" => 2, "name" => "Bob"}, id: '2' }
+], json: true)
+```
+
+When the `json: true` option is enabled, the matcher attempts to parse each event's `data` as JSON. If parsing fails (the data is not valid JSON), it raises an error.
+
 ## Examples
 
 ### Testing Event Types
@@ -133,6 +153,9 @@ expect(response).to contain_exactly_event_data(['{"id":2}', '{"id":1}', '{"id":3
 
 # Inclusion
 expect(response).to have_event_data(['{"id":1}', '{"id":2}'])
+
+# With JSON parsing
+expect(response).to be_event_data([{"id" => 1}, {"id" => 2}, {"id" => 3}], json: true)
 ```
 
 ### Testing Event IDs
@@ -177,12 +200,13 @@ expect(response).to contain_exactly_events(events)
 
 # Inclusion
 expect(response).to have_events([events.first])
-```
 
-### Testing Proper SSE Closure
-
-```ruby
-expect(response).to be_gracefully_closed
+# With JSON parsing
+json_events = [
+  { type: 'message', data: {"id" => 1}, id: '1', retry: 1000 },
+  { type: 'update', data: {"id" => 2}, id: '2', retry: 2000 }
+]
+expect(response).to be_events(json_events, json: true)
 ```
 
 ## Development
