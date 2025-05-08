@@ -15,12 +15,7 @@ RSpec.describe RSpec::SSE::Matchers do
 
   def mock_response_with_events(events)
     body = create_sse_body(events)
-    response = MockResponse.new(body:)
-
-    # Allow the SseParser to work with our mock response
-    allow(RSpec::SSE::Matchers::SseParser).to receive(:parse).with(body).and_return(events)
-
-    response
+    MockResponse.new(body:)
   end
 
   let(:event1) { {type: "message", data: '{"id":1}', id: "1", retry: 1000} }
