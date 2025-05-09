@@ -5,11 +5,14 @@ require "event_stream_parser"
 require "json"
 
 # @rbs!
-#   type ssePayload = {type: String?, data: String, id: String?, retry: Integer}
+#   type jsonParsedData = Hash[String, untyped]
+#   type ssePayload = {type: String?, data: String, id: String?, retry: Integer?}
+#   type ssePayloadWithJSONParsedData = {type: String?, data: jsonParsedData, id: String?, retry: Integer?}
 
 module RSpec
   module Matchers
-    # Matches if the response body ends with "\n\n" (SSE graceful close)
+    # Matches if the response body ends with "\n\n"(SSE graceful close)
+    #
     # @rbs return: RSpec::SSE::Matchers::BeGracefullyClosed
     def be_gracefully_closed
       RSpec::SSE::Matchers::BeGracefullyClosed.new
@@ -24,7 +27,7 @@ module RSpec
 
     # Matches if the response's events match the expected events in order
     #
-    # @rbs *events: ssePayload | Array[ssePayload]
+    # @rbs *events: ssePayload | Array[ssePayload] | ssePayloadWithJSONParsedData | Array[ssePayloadWithJSONParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::BeEvents
     def be_events(*events, json: false)
@@ -41,7 +44,7 @@ module RSpec
 
     # Matches if the response's event data match the expected data in order
     #
-    # @rbs *data: String | Array[String] | Array[Hash[String, untyped]]
+    # @rbs *data: String | Array[String] | jsonParsedData | Array[jsonParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::BeEventData
     def be_event_data(*data, json: false)
@@ -50,7 +53,7 @@ module RSpec
 
     # Matches if the response's event IDs match the expected IDs in order
     #
-    # @rbs *ids: String
+    # @rbs *ids: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::BeEventIds
     def be_event_ids(*ids)
       RSpec::SSE::Matchers::BeEventIds.new(ids.flatten)
@@ -66,7 +69,7 @@ module RSpec
 
     # Matches if the response's events contain the expected events regardless of order
     #
-    # @rbs *events: ssePayload | Array[ssePayload]
+    # @rbs *events: ssePayload | Array[ssePayload] | ssePayloadWithJSONParsedData | Array[ssePayloadWithJSONParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyEvents
     def contain_exactly_events(*events, json: false)
@@ -83,7 +86,7 @@ module RSpec
 
     # Matches if the response's event data contain the expected data regardless of order
     #
-    # @rbs *data: String | Array[String] | Array[Hash[String, untyped]]
+    # @rbs *data: String | Array[String] | jsonParsedData | Array[jsonParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyEventData
     def contain_exactly_event_data(*data, json: false)
@@ -108,7 +111,7 @@ module RSpec
 
     # Matches if the response's events include all the expected events
     #
-    # @rbs *events: ssePayload
+    # @rbs *events: ssePayload | Array[ssePayload] | ssePayloadWithJSONParsedData | Array[ssePayloadWithJSONParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::HaveEvents
     def have_events(*events, json: false)
@@ -125,7 +128,7 @@ module RSpec
 
     # Matches if the response's event data include all the expected data
     #
-    # @rbs *data: String | Array[String] | Array[Hash[String, untyped]]
+    # @rbs *data: String | Array[String] | jsonParsedData | Array[jsonParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::HaveEventData
     def have_event_data(*data, json: false)
@@ -134,7 +137,7 @@ module RSpec
 
     # Matches if the response's event IDs include all the expected IDs
     #
-    # @rbs *ids: String
+    # @rbs *ids: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::HaveEventIds
     def have_event_ids(*ids)
       RSpec::SSE::Matchers::HaveEventIds.new(ids.flatten)
@@ -142,7 +145,7 @@ module RSpec
 
     # Matches if the response's reconnection times include all the expected times
     #
-    # @rbs *times: Integer
+    # @rbs *times: Integer | Array[Integer]
     # @rbs return: RSpec::SSE::Matchers::HaveReconnectionTimes
     def have_reconnection_times(*times)
       RSpec::SSE::Matchers::HaveReconnectionTimes.new(times.flatten)
@@ -179,7 +182,6 @@ module RSpec
         # Initialize the matcher with expected values
         #
         # @rbs expected: Array[Object]
-        # @rbs return: RSpec::SSE::Matchers::BaseMatcher
         def initialize(expected, json: false)
           @expected = expected
           @json = json
@@ -240,7 +242,7 @@ module RSpec
       class BeGracefullyClosed
         # @rbs @actual: Object
 
-        # Match if the response body ends with "\n\n" (SSE graceful close)
+        # Match if the response body ends with "\n\n"(SSE graceful close)
         #
         # @rbs actual: Object
         # @rbs return: bool
@@ -405,12 +407,12 @@ module RSpec
         private
 
         # Extract event data from parsed events
-        # If :json option is enabled, attempt to parse the data as JSON
+        # If `:json` option is enabled, attempt to parse the data as JSON
         #
         # @rbs return: Array[String|Hash[String, untyped]]
         def extract_actual
           @parsed_events.map do |event|
-            # JSON parsing is enabled if json: true is passed
+            # JSON parsing is enabled if `json:` true is passed
             if @json
               JSON.parse(event[:data])
             else
