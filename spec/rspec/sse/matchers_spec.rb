@@ -67,8 +67,16 @@ RSpec.describe RSpec::SSE::Matchers do
       end
     end
 
-    context "when the response header's cache-control is wrong" do
+    context "when the response header's cache-control is another allowed one" do
       let(:headers) { {"content-type" => "text/event-stream", "cache-control" => "no-cache"} }
+
+      it do
+        expect(response).to be_sse_successfully_opened
+      end
+    end
+
+    context "when the response header's cache-control is wrong" do
+      let(:headers) { {"content-type" => "text/event-stream", "cache-control" => "public"} }
 
       it do
         expect(response).not_to be_sse_successfully_opened

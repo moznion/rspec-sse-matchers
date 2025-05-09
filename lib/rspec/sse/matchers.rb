@@ -277,7 +277,7 @@ module RSpec
         def matches?(actual)
           @actual = actual
           @actual.headers["content-type"] == "text/event-stream" \
-            && @actual.headers["cache-control"]&.match(/no-store/) \
+            && @actual.headers["cache-control"]&.match(/no-(?:store|cache)/) \
             && @actual.headers["content-length"].nil? \
             && @actual.status == 200
         end
