@@ -14,14 +14,14 @@ module RSpec
     # Matches if the response body ends with "\n\n"(SSE graceful close)
     #
     # @rbs return: RSpec::SSE::Matchers::BeGracefullyClosed
-    def be_gracefully_closed
+    def be_sse_gracefully_closed
       RSpec::SSE::Matchers::BeGracefullyClosed.new
     end
 
     # Matches if the response indicates successfully SSE connection opened
     #
     # @rbs return: RSpec::SSE::Matchers::BeSuccessfullyOpened
-    def be_successfully_opened
+    def be_sse_successfully_opened
       RSpec::SSE::Matchers::BeSuccessfullyOpened.new
     end
 
@@ -30,7 +30,7 @@ module RSpec
     # @rbs *events: ssePayload | Array[ssePayload] | ssePayloadWithJSONParsedData | Array[ssePayloadWithJSONParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::BeEvents
-    def be_events(*events, json: false)
+    def be_sse_events(*events, json: false)
       RSpec::SSE::Matchers::BeEvents.new(events.flatten, json:)
     end
 
@@ -38,7 +38,7 @@ module RSpec
     #
     # @rbs *types: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::BeEventTypes
-    def be_event_types(*types)
+    def be_sse_event_types(*types)
       RSpec::SSE::Matchers::BeEventTypes.new(types.flatten)
     end
 
@@ -47,7 +47,7 @@ module RSpec
     # @rbs *data: String | Array[String] | jsonParsedData | Array[jsonParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::BeEventData
-    def be_event_data(*data, json: false)
+    def be_sse_event_data(*data, json: false)
       RSpec::SSE::Matchers::BeEventData.new(data.flatten, json:)
     end
 
@@ -55,7 +55,7 @@ module RSpec
     #
     # @rbs *ids: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::BeEventIds
-    def be_event_ids(*ids)
+    def be_sse_event_ids(*ids)
       RSpec::SSE::Matchers::BeEventIds.new(ids.flatten)
     end
 
@@ -63,7 +63,7 @@ module RSpec
     #
     # @rbs *times: Integer | Array[Integer]
     # @rbs return: RSpec::SSE::Matchers::BeReconnectionTimes
-    def be_reconnection_times(*times)
+    def be_sse_reconnection_times(*times)
       RSpec::SSE::Matchers::BeReconnectionTimes.new(times.flatten)
     end
 
@@ -72,7 +72,7 @@ module RSpec
     # @rbs *events: ssePayload | Array[ssePayload] | ssePayloadWithJSONParsedData | Array[ssePayloadWithJSONParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyEvents
-    def contain_exactly_events(*events, json: false)
+    def contain_exactly_sse_events(*events, json: false)
       RSpec::SSE::Matchers::ContainExactlyEvents.new(events.flatten, json:)
     end
 
@@ -80,7 +80,7 @@ module RSpec
     #
     # @rbs *types: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyEventTypes
-    def contain_exactly_event_types(*types)
+    def contain_exactly_sse_event_types(*types)
       RSpec::SSE::Matchers::ContainExactlyEventTypes.new(types.flatten)
     end
 
@@ -89,7 +89,7 @@ module RSpec
     # @rbs *data: String | Array[String] | jsonParsedData | Array[jsonParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyEventData
-    def contain_exactly_event_data(*data, json: false)
+    def contain_exactly_sse_event_data(*data, json: false)
       RSpec::SSE::Matchers::ContainExactlyEventData.new(data.flatten, json:)
     end
 
@@ -97,7 +97,7 @@ module RSpec
     #
     # @rbs *ids: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyEventIds
-    def contain_exactly_event_ids(*ids)
+    def contain_exactly_sse_event_ids(*ids)
       RSpec::SSE::Matchers::ContainExactlyEventIds.new(ids.flatten)
     end
 
@@ -105,7 +105,7 @@ module RSpec
     #
     # @rbs *times: Integer | Array[Integer]
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyReconnectionTimes
-    def contain_exactly_reconnection_times(*times)
+    def contain_exactly_sse_reconnection_times(*times)
       RSpec::SSE::Matchers::ContainExactlyReconnectionTimes.new(times.flatten)
     end
 
@@ -114,7 +114,7 @@ module RSpec
     # @rbs *events: ssePayload | Array[ssePayload] | ssePayloadWithJSONParsedData | Array[ssePayloadWithJSONParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::HaveEvents
-    def have_events(*events, json: false)
+    def have_sse_events(*events, json: false)
       RSpec::SSE::Matchers::HaveEvents.new(events.flatten, json:)
     end
 
@@ -122,7 +122,7 @@ module RSpec
     #
     # @rbs *types: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::HaveEventTypes
-    def have_event_types(*types)
+    def have_sse_event_types(*types)
       RSpec::SSE::Matchers::HaveEventTypes.new(types.flatten)
     end
 
@@ -131,7 +131,7 @@ module RSpec
     # @rbs *data: String | Array[String] | jsonParsedData | Array[jsonParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::HaveEventData
-    def have_event_data(*data, json: false)
+    def have_sse_event_data(*data, json: false)
       RSpec::SSE::Matchers::HaveEventData.new(data.flatten, json:)
     end
 
@@ -139,7 +139,7 @@ module RSpec
     #
     # @rbs *ids: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::HaveEventIds
-    def have_event_ids(*ids)
+    def have_sse_event_ids(*ids)
       RSpec::SSE::Matchers::HaveEventIds.new(ids.flatten)
     end
 
@@ -147,7 +147,7 @@ module RSpec
     #
     # @rbs *times: Integer | Array[Integer]
     # @rbs return: RSpec::SSE::Matchers::HaveReconnectionTimes
-    def have_reconnection_times(*times)
+    def have_sse_reconnection_times(*times)
       RSpec::SSE::Matchers::HaveReconnectionTimes.new(times.flatten)
     end
   end

@@ -5,108 +5,108 @@ module RSpec
     # Matches if the response body ends with "\n\n"(SSE graceful close)
     #
     # @rbs return: RSpec::SSE::Matchers::BeGracefullyClosed
-    def be_gracefully_closed: () -> RSpec::SSE::Matchers::BeGracefullyClosed
+    def be_sse_gracefully_closed: () -> RSpec::SSE::Matchers::BeGracefullyClosed
 
     # Matches if the response indicates successfully SSE connection opened
     #
     # @rbs return: RSpec::SSE::Matchers::BeSuccessfullyOpened
-    def be_successfully_opened: () -> RSpec::SSE::Matchers::BeSuccessfullyOpened
+    def be_sse_successfully_opened: () -> RSpec::SSE::Matchers::BeSuccessfullyOpened
 
     # Matches if the response's events match the expected events in order
     #
     # @rbs *events: ssePayload | Array[ssePayload] | ssePayloadWithJSONParsedData | Array[ssePayloadWithJSONParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::BeEvents
-    def be_events: (*ssePayload | Array[ssePayload] | ssePayloadWithJSONParsedData | Array[ssePayloadWithJSONParsedData] events, ?json: bool) -> RSpec::SSE::Matchers::BeEvents
+    def be_sse_events: (*ssePayload | Array[ssePayload] | ssePayloadWithJSONParsedData | Array[ssePayloadWithJSONParsedData] events, ?json: bool) -> RSpec::SSE::Matchers::BeEvents
 
     # Matches if the response's event types match the expected types in order
     #
     # @rbs *types: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::BeEventTypes
-    def be_event_types: (*String | Array[String] types) -> RSpec::SSE::Matchers::BeEventTypes
+    def be_sse_event_types: (*String | Array[String] types) -> RSpec::SSE::Matchers::BeEventTypes
 
     # Matches if the response's event data match the expected data in order
     #
     # @rbs *data: String | Array[String] | jsonParsedData | Array[jsonParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::BeEventData
-    def be_event_data: (*String | Array[String] | jsonParsedData | Array[jsonParsedData] data, ?json: bool) -> RSpec::SSE::Matchers::BeEventData
+    def be_sse_event_data: (*String | Array[String] | jsonParsedData | Array[jsonParsedData] data, ?json: bool) -> RSpec::SSE::Matchers::BeEventData
 
     # Matches if the response's event IDs match the expected IDs in order
     #
     # @rbs *ids: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::BeEventIds
-    def be_event_ids: (*String | Array[String] ids) -> RSpec::SSE::Matchers::BeEventIds
+    def be_sse_event_ids: (*String | Array[String] ids) -> RSpec::SSE::Matchers::BeEventIds
 
     # Matches if the response's reconnection times match the expected times in order
     #
     # @rbs *times: Integer | Array[Integer]
     # @rbs return: RSpec::SSE::Matchers::BeReconnectionTimes
-    def be_reconnection_times: (*Integer | Array[Integer] times) -> RSpec::SSE::Matchers::BeReconnectionTimes
+    def be_sse_reconnection_times: (*Integer | Array[Integer] times) -> RSpec::SSE::Matchers::BeReconnectionTimes
 
     # Matches if the response's events contain the expected events regardless of order
     #
     # @rbs *events: ssePayload | Array[ssePayload] | ssePayloadWithJSONParsedData | Array[ssePayloadWithJSONParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyEvents
-    def contain_exactly_events: (*ssePayload | Array[ssePayload] | ssePayloadWithJSONParsedData | Array[ssePayloadWithJSONParsedData] events, ?json: bool) -> RSpec::SSE::Matchers::ContainExactlyEvents
+    def contain_exactly_sse_events: (*ssePayload | Array[ssePayload] | ssePayloadWithJSONParsedData | Array[ssePayloadWithJSONParsedData] events, ?json: bool) -> RSpec::SSE::Matchers::ContainExactlyEvents
 
     # Matches if the response's event types contain the expected types regardless of order
     #
     # @rbs *types: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyEventTypes
-    def contain_exactly_event_types: (*String | Array[String] types) -> RSpec::SSE::Matchers::ContainExactlyEventTypes
+    def contain_exactly_sse_event_types: (*String | Array[String] types) -> RSpec::SSE::Matchers::ContainExactlyEventTypes
 
     # Matches if the response's event data contain the expected data regardless of order
     #
     # @rbs *data: String | Array[String] | jsonParsedData | Array[jsonParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyEventData
-    def contain_exactly_event_data: (*String | Array[String] | jsonParsedData | Array[jsonParsedData] data, ?json: bool) -> RSpec::SSE::Matchers::ContainExactlyEventData
+    def contain_exactly_sse_event_data: (*String | Array[String] | jsonParsedData | Array[jsonParsedData] data, ?json: bool) -> RSpec::SSE::Matchers::ContainExactlyEventData
 
     # Matches if the response's event IDs contain the expected IDs regardless of order
     #
     # @rbs *ids: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyEventIds
-    def contain_exactly_event_ids: (*String | Array[String] ids) -> RSpec::SSE::Matchers::ContainExactlyEventIds
+    def contain_exactly_sse_event_ids: (*String | Array[String] ids) -> RSpec::SSE::Matchers::ContainExactlyEventIds
 
     # Matches if the response's reconnection times contain the expected times regardless of order
     #
     # @rbs *times: Integer | Array[Integer]
     # @rbs return: RSpec::SSE::Matchers::ContainExactlyReconnectionTimes
-    def contain_exactly_reconnection_times: (*Integer | Array[Integer] times) -> RSpec::SSE::Matchers::ContainExactlyReconnectionTimes
+    def contain_exactly_sse_reconnection_times: (*Integer | Array[Integer] times) -> RSpec::SSE::Matchers::ContainExactlyReconnectionTimes
 
     # Matches if the response's events include all the expected events
     #
     # @rbs *events: ssePayload | Array[ssePayload] | ssePayloadWithJSONParsedData | Array[ssePayloadWithJSONParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::HaveEvents
-    def have_events: (*ssePayload | Array[ssePayload] | ssePayloadWithJSONParsedData | Array[ssePayloadWithJSONParsedData] events, ?json: bool) -> RSpec::SSE::Matchers::HaveEvents
+    def have_sse_events: (*ssePayload | Array[ssePayload] | ssePayloadWithJSONParsedData | Array[ssePayloadWithJSONParsedData] events, ?json: bool) -> RSpec::SSE::Matchers::HaveEvents
 
     # Matches if the response's event types include all the expected types
     #
     # @rbs *types: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::HaveEventTypes
-    def have_event_types: (*String | Array[String] types) -> RSpec::SSE::Matchers::HaveEventTypes
+    def have_sse_event_types: (*String | Array[String] types) -> RSpec::SSE::Matchers::HaveEventTypes
 
     # Matches if the response's event data include all the expected data
     #
     # @rbs *data: String | Array[String] | jsonParsedData | Array[jsonParsedData]
     # @rbs json: bool
     # @rbs return: RSpec::SSE::Matchers::HaveEventData
-    def have_event_data: (*String | Array[String] | jsonParsedData | Array[jsonParsedData] data, ?json: bool) -> RSpec::SSE::Matchers::HaveEventData
+    def have_sse_event_data: (*String | Array[String] | jsonParsedData | Array[jsonParsedData] data, ?json: bool) -> RSpec::SSE::Matchers::HaveEventData
 
     # Matches if the response's event IDs include all the expected IDs
     #
     # @rbs *ids: String | Array[String]
     # @rbs return: RSpec::SSE::Matchers::HaveEventIds
-    def have_event_ids: (*String | Array[String] ids) -> RSpec::SSE::Matchers::HaveEventIds
+    def have_sse_event_ids: (*String | Array[String] ids) -> RSpec::SSE::Matchers::HaveEventIds
 
     # Matches if the response's reconnection times include all the expected times
     #
     # @rbs *times: Integer | Array[Integer]
     # @rbs return: RSpec::SSE::Matchers::HaveReconnectionTimes
-    def have_reconnection_times: (*Integer | Array[Integer] times) -> RSpec::SSE::Matchers::HaveReconnectionTimes
+    def have_sse_reconnection_times: (*Integer | Array[Integer] times) -> RSpec::SSE::Matchers::HaveReconnectionTimes
   end
 end
 

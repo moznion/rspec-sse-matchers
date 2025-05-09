@@ -35,7 +35,7 @@ def index
   response.headers['Cache-Control'] = 'no-store'
   response.headers['Content-Type'] = 'text/event-stream'
   sse = SSE.new(response.stream)
-  
+
   sse.write({id: 1, message: 'Hello'}, event: 'message', id: 1)
   sse.write({id: 2, message: 'World'}, event: 'update', id: 2)
   sse.close
@@ -45,15 +45,15 @@ end
 RSpec.describe 'SSE endpoint', type: :request do
   it 'sends the expected events' do
     get '/events', headers: { 'Accept' => 'text/event-stream' }
-    
+
     # Verify the response indicates a successful SSE connection
-    expect(response).to be_successfully_opened
-    
+    expect(response).to be_sse_successfully_opened
+
     # Verify the event types
-    expect(response).to be_event_types(['message', 'update'])
-    
+    expect(response).to be_sse_event_types(['message', 'update'])
+
     # Verify that the response is properly closed
-    expect(response).to be_gracefully_closed
+    expect(response).to be_sse_gracefully_closed
   end
 end
 ```
@@ -64,38 +64,38 @@ end
 
 These matchers check that the specified values appear in the exact order:
 
-- `be_events`: Check that the events exactly match the expected events
-- `be_event_types`: Check that the event types exactly match the expected types
-- `be_event_data`: Check that the event data exactly match the expected data
-- `be_event_ids`: Check that the event IDs exactly match the expected IDs
-- `be_reconnection_times`: Check that the reconnection times exactly match the expected times
+- `be_sse_events`: Check that the events exactly match the expected events
+- `be_sse_event_types`: Check that the event types exactly match the expected types
+- `be_sse_event_data`: Check that the event data exactly match the expected data
+- `be_sse_event_ids`: Check that the event IDs exactly match the expected IDs
+- `be_sse_reconnection_times`: Check that the reconnection times exactly match the expected times
 
-All event data matchers (`be_event_data`, `contain_exactly_event_data`, `have_event_data`) and event matchers (`be_events`, `contain_exactly_events`, `have_events`) accept a `json: true` option that will parse the JSON in event data for comparison.
+All event data matchers (`be_sse_event_data`, `contain_exactly_sse_event_data`, `have_sse_event_data`) and event matchers (`be_sse_events`, `contain_exactly_sse_events`, `have_sse_events`) accept a `json: true` option that will parse the JSON in event data for comparison.
 
 #### Order-Independent Matchers
 
 These matchers check that the specified values appear in any order:
 
-- `contain_exactly_events`: Check that the events match the expected events regardless of order
-- `contain_exactly_event_types`: Check that the event types match the expected types regardless of order
-- `contain_exactly_event_data`: Check that the event data match the expected data regardless of order
-- `contain_exactly_event_ids`: Check that the event IDs match the expected IDs regardless of order
-- `contain_exactly_reconnection_times`: Check that the reconnection times match the expected times regardless of order
+- `contain_exactly_sse_events`: Check that the events match the expected events regardless of order
+- `contain_exactly_sse_event_types`: Check that the event types match the expected types regardless of order
+- `contain_exactly_sse_event_data`: Check that the event data match the expected data regardless of order
+- `contain_exactly_sse_event_ids`: Check that the event IDs match the expected IDs regardless of order
+- `contain_exactly_sse_reconnection_times`: Check that the reconnection times match the expected times regardless of order
 
 #### Inclusion Matchers
 
 These matchers check that all the expected values are included:
 
-- `have_events`: Check that all the expected events are included
-- `have_event_types`: Check that all the expected event types are included
-- `have_event_data`: Check that all the expected event data are included
-- `have_event_ids`: Check that all the expected event IDs are included
-- `have_reconnection_times`: Check that all the expected reconnection times are included
+- `have_sse_events`: Check that all the expected events are included
+- `have_sse_event_types`: Check that all the expected event types are included
+- `have_sse_event_data`: Check that all the expected event data are included
+- `have_sse_event_ids`: Check that all the expected event IDs are included
+- `have_sse_reconnection_times`: Check that all the expected reconnection times are included
 
 #### Miscellaneous Matchers
 
-- `be_successfully_opened`: Check that the response indicates the SSE connection has been opened successfully
-- `be_gracefully_closed`: Check that the response body ends with "\n\n" (indicating proper SSE close)
+- `be_sse_successfully_opened`: Check that the response indicates the SSE connection has been opened successfully
+- `be_sse_gracefully_closed`: Check that the response body ends with "\n\n" (indicating proper SSE close)
 
 ### Argument Formats
 
@@ -103,8 +103,8 @@ All matchers can accept their arguments either as individual arguments or as an 
 
 ```ruby
 # These are equivalent:
-expect(response).to have_event_types('message', 'update', 'close')
-expect(response).to have_event_types(['message', 'update', 'close'])
+expect(response).to have_sse_event_types('message', 'update', 'close')
+expect(response).to have_sse_event_types(['message', 'update', 'close'])
 ```
 
 ### JSON Parsing Option
@@ -113,15 +113,15 @@ Event data matchers and event matchers accept a `json: true` option that automat
 
 ```ruby
 # Without JSON parsing (string comparison)
-expect(response).to be_event_data(['{"id":1,"name":"Alice"}', '{"id":2,"name":"Bob"}'])
+expect(response).to be_sse_event_data(['{"id":1,"name":"Alice"}', '{"id":2,"name":"Bob"}'])
 
 # With JSON parsing (object comparison)
-expect(response).to be_event_data([{"id" => 1, "name" => "Alice"}, {"id" => 2, "name" => "Bob"}], json: true)
+expect(response).to be_sse_event_data([{"id" => 1, "name" => "Alice"}, {"id" => 2, "name" => "Bob"}], json: true)
 
 # This also works with event matchers
-expect(response).to be_events([
-  { type: 'message', data: {"id" => 1, "name" => "Alice"}, id: '1' },
-  { type: 'update', data: {"id" => 2, "name" => "Bob"}, id: '2' }
+expect(response).to be_sse_events([
+  {type: 'message', data: {"id" => 1, "name" => "Alice"}, id: '1'},
+  {type: 'update', data: {"id" => 2, "name" => "Bob"}, id: '2'}
 ], json: true)
 ```
 
@@ -133,80 +133,80 @@ When the `json: true` option is enabled, the matcher attempts to parse each even
 
 ```ruby
 # Exact order
-expect(response).to be_event_types(['message', 'update', 'close'])
+expect(response).to be_sse_event_types(['message', 'update', 'close'])
 
 # Any order
-expect(response).to contain_exactly_event_types(['update', 'message', 'close'])
+expect(response).to contain_exactly_sse_event_types(['update', 'message', 'close'])
 
 # Inclusion
-expect(response).to have_event_types(['message', 'update'])
+expect(response).to have_sse_event_types(['message', 'update'])
 ```
 
 ### Testing Event Data
 
 ```ruby
 # Exact order
-expect(response).to be_event_data(['{"id":1}', '{"id":2}', '{"id":3}'])
+expect(response).to be_sse_event_data(['{"id":1}', '{"id":2}', '{"id":3}'])
 
 # Any order
-expect(response).to contain_exactly_event_data(['{"id":2}', '{"id":1}', '{"id":3}'])
+expect(response).to contain_exactly_sse_event_data(['{"id":2}', '{"id":1}', '{"id":3}'])
 
 # Inclusion
-expect(response).to have_event_data(['{"id":1}', '{"id":2}'])
+expect(response).to have_sse_event_data(['{"id":1}', '{"id":2}'])
 
 # With JSON parsing
-expect(response).to be_event_data([{"id" => 1}, {"id" => 2}, {"id" => 3}], json: true)
+expect(response).to be_sse_event_data([{"id" => 1}, {"id" => 2}, {"id" => 3}], json: true)
 ```
 
 ### Testing Event IDs
 
 ```ruby
 # Exact order
-expect(response).to be_event_ids(['1', '2', '3'])
+expect(response).to be_sse_event_ids(['1', '2', '3'])
 
 # Any order
-expect(response).to contain_exactly_event_ids(['2', '1', '3'])
+expect(response).to contain_exactly_sse_event_ids(['2', '1', '3'])
 
 # Inclusion
-expect(response).to have_event_ids(['1', '2'])
+expect(response).to have_sse_event_ids(['1', '2'])
 ```
 
 ### Testing Reconnection Times
 
 ```ruby
 # Exact order
-expect(response).to be_reconnection_times([1000, 2000, 3000])
+expect(response).to be_sse_reconnection_times([1000, 2000, 3000])
 
 # Any order
-expect(response).to contain_exactly_reconnection_times([2000, 1000, 3000])
+expect(response).to contain_exactly_sse_reconnection_times([2000, 1000, 3000])
 
 # Inclusion
-expect(response).to have_reconnection_times([1000, 2000])
+expect(response).to have_sse_reconnection_times([1000, 2000])
 ```
 
 ### Testing Complete Events
 
 ```ruby
 events = [
-  { type: 'message', data: '{"id":1}', id: '1', retry: 1000 },
-  { type: 'update', data: '{"id":2}', id: '2', retry: 2000 }
+  {type: 'message', data: '{"id":1}', id: '1', retry: 1000},
+  {type: 'update', data: '{"id":2}', id: '2', retry: 2000}
 ]
 
 # Exact order
-expect(response).to be_events(events)
+expect(response).to be_sse_events(events)
 
 # Any order
-expect(response).to contain_exactly_events(events)
+expect(response).to contain_exactly_sse_events(events)
 
 # Inclusion
-expect(response).to have_events([events.first])
+expect(response).to have_sse_events([events.first])
 
 # With JSON parsing
 json_events = [
-  { type: 'message', data: {"id" => 1}, id: '1', retry: 1000 },
-  { type: 'update', data: {"id" => 2}, id: '2', retry: 2000 }
+  {type: 'message', data: {"id" => 1}, id: '1', retry: 1000},
+  {type: 'update', data: {"id" => 2}, id: '2', retry: 2000}
 ]
-expect(response).to be_events(json_events, json: true)
+expect(response).to be_sse_events(json_events, json: true)
 ```
 
 ## Development

@@ -82,31 +82,31 @@ RSpec.describe "SSE Matchers Examples" do
   describe "Order-Independent Matchers" do
     context "contain_exactly_events" do
       it "passes when events match in any order" do
-        expect(multiple_events_response).to contain_exactly_events([event3, event1, event2])
+        expect(multiple_events_response).to contain_exactly_sse_events([event3, event1, event2])
       end
     end
 
     context "contain_exactly_event_types" do
       it "passes when event types match in any order" do
-        expect(multiple_events_response).to contain_exactly_event_types(%w[close message update])
+        expect(multiple_events_response).to contain_exactly_sse_event_types(%w[close message update])
       end
     end
 
     context "contain_exactly_event_data" do
       it "passes when event data match in any order" do
-        expect(multiple_events_response).to contain_exactly_event_data(%w[{"id":3,"message":"Goodbye"} {"id":1,"message":"Hello"} {"id":2,"message":"World"}])
+        expect(multiple_events_response).to contain_exactly_sse_event_data(%w[{"id":3,"message":"Goodbye"} {"id":1,"message":"Hello"} {"id":2,"message":"World"}])
       end
     end
 
     context "contain_exactly_event_ids" do
       it "passes when event IDs match in any order" do
-        expect(multiple_events_response).to contain_exactly_event_ids(%w[3 1 2])
+        expect(multiple_events_response).to contain_exactly_sse_event_ids(%w[3 1 2])
       end
     end
 
     context "contain_exactly_reconnection_times" do
       it "passes when reconnection times match in any order" do
-        expect(multiple_events_response).to contain_exactly_reconnection_times([3000, 1000, 2000])
+        expect(multiple_events_response).to contain_exactly_sse_reconnection_times([3000, 1000, 2000])
       end
     end
   end
@@ -156,7 +156,7 @@ RSpec.describe "SSE Matchers Examples" do
 
       it "fails when the response body doesn't end with a double newline" do
         incomplete_response = MockResponse.new("event: message\ndata: test\n")
-        expect(incomplete_response).not_to be_gracefully_closed
+        expect(incomplete_response).not_to be_sse_gracefully_closed
       end
     end
   end
@@ -186,7 +186,7 @@ RSpec.describe "SSE Matchers Examples" do
       end
 
       it "works with contain_exactly matchers" do
-        expect(multiple_events_response).to contain_exactly_event_data([
+        expect(multiple_events_response).to contain_exactly_sse_event_data([
           {"id" => 3, "message" => "Goodbye"},
           {"id" => 1, "message" => "Hello"},
           {"id" => 2, "message" => "World"}
