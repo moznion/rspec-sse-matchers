@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rspec-sse-matchers (0.1.0)
+    rspec-sse-matchers (0.1.1)
       event_stream_parser (~> 1.0.0)
 
 GEM
