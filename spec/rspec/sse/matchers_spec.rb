@@ -82,14 +82,6 @@ RSpec.describe RSpec::SSE::Matchers do
         expect(response).not_to be_sse_successfully_opened
       end
     end
-
-    context "when the response header's content-length appears" do
-      let(:headers) { {"content-type" => "text/event-stream", "cache-control" => "no-store", "content-length" => 44} }
-
-      it do
-        expect(response).not_to be_sse_successfully_opened
-      end
-    end
   end
 
   # Exact order matchers

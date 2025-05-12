@@ -278,18 +278,17 @@ module RSpec
           @actual = actual
           @actual.headers["content-type"] == "text/event-stream" \
             && @actual.headers["cache-control"]&.match(/no-(?:store|cache)/) \
-            && @actual.headers["content-length"].nil? \
             && @actual.status == 200
         end
 
         # @rbs return: String
         def failure_message
-          "Expected response header of `content-type` is `text/event-stream`, `cache-control` contains `no-store`, `content-length` does not exist, and status code is `2xx`"
+          "Expected response header of `content-type` is `text/event-stream`, `cache-control` contains `no-store` or `no-cache`, and status code is `2xx`"
         end
 
         # @rbs return: String
         def failure_message_when_negated
-          "Expected response header of `content-type` is not `text/event-stream`, `cache-control` does not contain `no-store`, `content-length` exists, and/or status code is not `2xx`"
+          "Expected response header of `content-type` is not `text/event-stream`, `cache-control` does not contain `no-store` or `no-cache`, and/or status code is not `2xx`"
         end
 
         # @rbs return: String
