@@ -187,6 +187,40 @@ module RSpec
           @json = json
         end
 
+        # Check if individual items match
+        # Supports RSpec matchers as expected values
+        #
+        # @rbs actual_item: Object
+        # @rbs expected_item: Object
+        # @rbs return: bool
+        def match_items(actual_item, expected_item)
+          if expected_item.respond_to?(:===)
+            # It's an RSpec argument matcher (hash_including, etc.)
+            expected_item === actual_item
+          elsif expected_item.respond_to?(:matches?)
+            # It's an RSpec regular matcher
+            expected_item.matches?(actual_item)
+          else
+            actual_item == expected_item
+          end
+        end
+
+        # Check if two arrays match element by element
+        # Supports RSpec matchers as expected values
+        #
+        # @rbs actual_array: Array[Object]
+        # @rbs expected_array: Array[Object]
+        # @rbs return: bool
+        def match_arrays(actual_array, expected_array)
+          return false unless actual_array.size == expected_array.size
+
+          actual_array.each_with_index do |actual_item, index|
+            expected_item = expected_array[index]
+            return false unless match_items(actual_item, expected_item)
+          end
+          true
+        end
+
         # @rbs actual: Object
         # @rbs return: bool
         def matches?(actual)
@@ -302,7 +336,7 @@ module RSpec
         #
         # @rbs return: bool
         def match_condition
-          extract_actual == @expected
+          match_arrays(extract_actual, @expected)
         end
 
         # @rbs return: String
@@ -317,7 +351,22 @@ module RSpec
         #
         # @rbs return: bool
         def match_condition
-          (extract_actual - @expected).empty? && (@expected - extract_actual).empty? && extract_actual.size == @expected.size
+          return false unless extract_actual.size == @expected.size
+
+          matched_indices = {}
+          @expected.each do |expected_item|
+            matched = false
+            extract_actual.each_with_index do |actual_item, index|
+              next if matched_indices[index]
+              if match_items(actual_item, expected_item)
+                matched_indices[index] = true
+                matched = true
+                break
+              end
+            end
+            return false unless matched
+          end
+          true
         end
 
         # @rbs return: String
@@ -332,7 +381,9 @@ module RSpec
         #
         # @rbs return: bool
         def match_condition
-          @expected.all? { |expected_item| extract_actual.include?(expected_item) }
+          @expected.all? do |expected_item|
+            extract_actual.any? { |actual_item| match_items(actual_item, expected_item) }
+          end
         end
 
         # @rbs return: String

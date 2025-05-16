@@ -127,6 +127,51 @@ expect(response).to be_sse_events([
 
 When the `json: true` option is enabled, the matcher attempts to parse each event's `data` as JSON. If parsing fails (the data is not valid JSON), it raises an error.
 
+### Using Custom RSpec Matchers
+
+The SSE matchers now support RSpec custom matchers like `hash_including`, `a_kind_of`, `be_an`, etc. This allows for more flexible matching when testing SSE events with complex data structures:
+
+```ruby
+# With hash_including for partial matching
+expect(response).to be_sse_events([
+  {type: "in_progress", data: {"event" => "in_progress", "data" => {}}, id: "1", retry: 250},
+  hash_including(
+    type: "finished",
+    data: hash_including(
+      "event" => "finished",
+      "data" => hash_including(
+        "object_id" => a_kind_of(String),  # or a_string_starting_with("prefix_")
+        "results" => be_an(Array)
+      )
+    ),
+    id: "2",
+    retry: 250
+  )
+], json: true)
+
+# With type checking matchers
+expect(response).to be_sse_event_data([
+  hash_including("id" => a_kind_of(Integer), "name" => a_kind_of(String)),
+  hash_including("status" => match(/active|pending/))
+], json: true)
+
+# Works with all matcher types
+expect(response).to contain_exactly_sse_events([
+  hash_including(data: hash_including("status" => "pending")),
+  hash_including(data: hash_including("status" => "active"))
+], json: true)
+
+expect(response).to have_sse_events([
+  hash_including(data: hash_including("important_field" => "value"))
+], json: true)
+```
+
+Custom matchers are particularly useful when:
+- You only care about specific fields in the event data
+- You want to match patterns or types rather than exact values
+- You need to test complex nested structures
+- You want to ignore irrelevant fields
+
 ## Examples
 
 ### Testing Event Types
