@@ -133,6 +133,22 @@ module RSpec
         # @rbs expected: Array[Object]
         def initialize: (Array[Object] expected, ?json: untyped) -> untyped
 
+        # Check if individual items match
+        # Supports RSpec matchers as expected values
+        #
+        # @rbs actual_item: Object
+        # @rbs expected_item: Object
+        # @rbs return: bool
+        def match_items: (Object actual_item, Object expected_item) -> bool
+
+        # Check if two arrays match element by element
+        # Supports RSpec matchers as expected values
+        #
+        # @rbs actual_array: Array[Object]
+        # @rbs expected_array: Array[Object]
+        # @rbs return: bool
+        def match_arrays: (Array[Object] actual_array, Array[Object] expected_array) -> bool
+
         # @rbs actual: Object
         # @rbs return: bool
         def matches?: (Object actual) -> bool

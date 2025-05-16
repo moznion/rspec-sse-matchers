@@ -407,4 +407,147 @@ RSpec.describe RSpec::SSE::Matchers do
       end
     end
   end
+
+  describe "support for custom RSpec matchers" do
+    context "with hash_including" do
+      let(:event1) { {type: "in_progress", data: '{"event":"in_progress","data":{}}', id: "1", retry: 250} }
+      let(:event2) { {type: "finished", data: '{"event":"finished","data":{"object_id":"special_prefix_123","results":[1,2,3]}}', id: "2", retry: 250} }
+      let(:response) { mock_response_with_events([event1, event2]) }
+
+      it "matches with hash_including in be_sse_events" do
+        expect(response).to be_sse_events([
+          {type: "in_progress", data: {"event" => "in_progress", "data" => {}}, id: "1", retry: 250},
+          hash_including(
+            type: "finished",
+            data: hash_including(
+              "event" => "finished",
+              "data" => hash_including(
+                "object_id" => a_kind_of(String),
+                "results" => be_an(Array)
+              )
+            ),
+            id: "2",
+            retry: 250
+          )
+        ], json: true)
+      end
+
+      it "matches with hash_including and a_string_starting_with" do
+        expect(response).to be_sse_events([
+          {type: "in_progress", data: {"event" => "in_progress", "data" => {}}, id: "1", retry: 250},
+          hash_including(
+            type: "finished",
+            data: hash_including(
+              "event" => "finished",
+              "data" => hash_including(
+                "object_id" => a_string_starting_with("special_prefix_"),
+                "results" => be_an(Array)
+              )
+            ),
+            id: "2",
+            retry: 250
+          )
+        ], json: true)
+      end
+
+      it "fails when hash_including doesn't match" do
+        expect {
+          expect(response).to be_sse_events([
+            {type: "in_progress", data: {"event" => "in_progress", "data" => {}}, id: "1", retry: 250},
+            hash_including(
+              type: "finished",
+              data: hash_including(
+                "event" => "finished",
+                "data" => hash_including(
+                  "object_id" => a_string_starting_with("wrong_prefix_"),
+                  "results" => be_an(Array)
+                )
+              ),
+              id: "2",
+              retry: 250
+            )
+          ], json: true)
+        }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+      end
+    end
+
+    context "with event data matching" do
+      let(:event1) { {type: "message", data: '{"id":1,"name":"Alice","age":30}', id: "1", retry: 1000} }
+      let(:event2) { {type: "message", data: '{"id":2,"name":"Bob","age":25}', id: "2", retry: 1000} }
+      let(:response) { mock_response_with_events([event1, event2]) }
+
+      it "matches partial data with hash_including" do
+        expect(response).to be_sse_event_data([
+          hash_including("name" => "Alice"),
+          hash_including("name" => "Bob", "age" => 25)
+        ], json: true)
+      end
+
+      it "matches with a_kind_of matchers" do
+        expect(response).to be_sse_event_data([
+          hash_including("id" => a_kind_of(Integer), "name" => a_kind_of(String)),
+          hash_including("id" => a_kind_of(Integer), "name" => a_kind_of(String))
+        ], json: true)
+      end
+    end
+
+    context "with contain_exactly matchers" do
+      let(:event1) { {type: "message", data: '{"id":1,"status":"active"}', id: "1", retry: 1000} }
+      let(:event2) { {type: "message", data: '{"id":2,"status":"pending"}', id: "2", retry: 1000} }
+      let(:response) { mock_response_with_events([event1, event2]) }
+
+      it "matches in any order with hash_including" do
+        expect(response).to contain_exactly_sse_events([
+          hash_including(data: hash_including("status" => "pending")),
+          hash_including(data: hash_including("status" => "active"))
+        ], json: true)
+      end
+    end
+
+    context "with have matchers" do
+      let(:event1) { {type: "message", data: '{"id":1,"status":"active"}', id: "1", retry: 1000} }
+      let(:event2) { {type: "message", data: '{"id":2,"status":"pending"}', id: "2", retry: 1000} }
+      let(:event3) { {type: "message", data: '{"id":3,"status":"completed"}', id: "3", retry: 1000} }
+      let(:response) { mock_response_with_events([event1, event2, event3]) }
+
+      it "matches subset with hash_including" do
+        expect(response).to have_sse_events([
+          hash_including(data: hash_including("status" => "active")),
+          hash_including(data: hash_including("status" => "completed"))
+        ], json: true)
+      end
+    end
+
+    context "with complex nested structures" do
+      let(:complex_event) {
+        {
+          type: "update",
+          data: '{"user":{"id":123,"profile":{"name":"John","settings":{"notifications":true}}},"timestamp":"2023-01-01"}',
+          id: "complex",
+          retry: 5000
+        }
+      }
+      let(:response) { mock_response_with_events([complex_event]) }
+
+      it "matches deeply nested structures with custom matchers" do
+        expect(response).to be_sse_events([
+          hash_including(
+            type: "update",
+            data: hash_including(
+              "user" => hash_including(
+                "id" => a_kind_of(Integer),
+                "profile" => hash_including(
+                  "name" => a_string_matching(/John/),
+                  "settings" => hash_including(
+                    "notifications" => be_truthy
+                  )
+                )
+              ),
+              "timestamp" => match(/^\d{4}-\d{2}-\d{2}$/)
+            )
+          )
+        ], json: true)
+      end
+    end
+  end
 end
