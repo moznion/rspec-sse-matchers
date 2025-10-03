@@ -9,4 +9,4 @@ gem "rake", "~> 13.2"
 gem "rspec", "~> 3.13"
 gem "standard", "~> 1.47"
 gem "simplecov", "~> 0.22.0", require: false
-gem "rbs-inline", "~> 0.11.0", require: false
+gem "rbs-inline", "~> 0.12.0", require: false
